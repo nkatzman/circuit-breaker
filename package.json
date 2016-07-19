@@ -1,0 +1,15 @@
+{
+  "name": "nkatzman_github",
+  "version": "1.0.0",
+  "description": "Wrapper around circuit-breaker implementation ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "circuitbreaker": "^0.2.1",
+    "request": "^2.73.0"
+  }
+}
