@@ -1,13 +1,49 @@
 {
-  "name": "nkatzman_github",
-  "version": "1.0.0",
-  "description": "Wrapper around circuit-breaker implementation ",
+  "name": "circuit-fuses",
+  "version": "0.0.1",
+  "description": "Wrapper around node-circuitbreaker to define a callback interface",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pretest": "eslint .",
+    "test": "jenkins-mocha --recursive"
   },
-  "author": "",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:screwdriver-cd/circuit-breaker.git"
+  },
+  "homepage": "https://github.com/screwdriver-cd/circuit-breaker",
+  "bugs": "https://github.com/screwdriver-cd/circuit-breaker/issues",
+  "keywords": [
+    "screwdriver",
+    "yahoo",
+    "circuitbreaker",
+    "circuit-breaker",
+    "circuit",
+    "breaker"
+  ],
+  "license": "BSD-3-Clause",
+  "author": "Noah Katzman <nbkatzman@gmail.com>",
+  "contributors": [
+    "Dao Lam <daolam112@gmail.com>",
+    "Darren Matsumoto <aeneascorrupt@gmail.com>",
+    "Jeremiah Wuenschel <jeremiah.wuenschel@gmail.com>",
+    "Noah Katzman <nbkatzman@gmail.com>",
+    "Peter Peterson <jedipetey@gmail.com>",
+    "St. John Johnson <st.john.johnson@gmail.com",
+    "Tiffany Kyi <tiffanykyi@gmail.com>"
+  ],
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^2.10.2",
+    "eslint-config-screwdriver": "^1.0.0",
+    "eslint-plugin-import": "^1.8.0",
+    "eslint-plugin-jsx-a11y": "^1.2.2",
+    "eslint-plugin-react": "^5.1.1",
+    "jenkins-mocha": "^2.6.0",
+    "mockery": "^1.7.0",
+    "sinon": "^1.17.4",
+    "sinon-as-promised": "^3.0.1"
+  },
   "dependencies": {
     "circuitbreaker": "^0.2.1",
     "request": "^2.73.0"

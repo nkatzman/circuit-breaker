@@ -1,26 +1,97 @@
 'use strict';
-
-let circuitbreaker = require('circuitbreaker');
+const circuitbreaker = require('circuitbreaker');
 
 class CircuitBreaker {
-    constructor(command) {
+
+    /**
+     * Construct a CircuitBreaker object
+     * @method constructor
+     * @param  {Function}   command              The command to be running that requires the circuit breaker
+     * @param  {Object}     [options]            Options to configure the circuit breaker with
+     * @param  {Number}     options.timeout      The timeout in ms to wait for a command to complete
+     * @param  {Number}     options.maxFailures  The number of failures before the circuit is tripped
+     * @param  {Number}     options.resetTimeout The timeout in ms to reset the switch
+     */
+    constructor(command, options) {
         this.command = command;
-        this.breaker = circuitbreaker(this.command, {
-            timeout: 10,
-            maxFailures: 3,
-            resetTimeout: 30
+        this.options = options || {
+            timeout: 10000,
+            maxFailures: 5,
+            resetTimeout: 50
+        };
+        this.breaker = circuitbreaker(this.command, this.options);
+    }
+
+    /**
+     * Run the breaker command specified in the constructor
+     * @method runCommand
+     * @param  {arguments}   arguments           List of arguments to call the circuit breaker command with
+     * @param  {Function}    callback            Last argument is the callback to callback upon completion
+     */
+    runCommand() {
+        const args = Array.prototype.slice.call(arguments);
+        const callback = args.pop();
+
+        this.breaker.apply(this.breaker, args).catch((err) => {
+            callback(err);
+            throw err;
+        }).then((data) => {
+            callback(null, data);
         });
     }
 
-    run() {
-        let args = Array.prototype.slice.call(arguments);
-        let callback = args.pop();
+    /**
+     * Get the Total Number of requests
+     * @method  getTotalRequests
+     * @returns {Number}    Total number requests
+     */
+    getTotalRequests() {
+        return this.breaker.stats.totalRequests;
+    }
 
-        this.breaker.apply(this.breaker, args).then((data) => {
-            callback(null, data);
-        }).fail((err) => {
-            callback(err);
-        });
+    /**
+     * Get the Total Number of request timeouts
+     * @method  getTimeouts
+     * @returns {Number}    Total number timeouts
+     */
+    getTimeouts() {
+        return this.breaker.stats.timeouts;
+    }
+
+    /**
+     * Get the Total Number of successful requests
+     * @method  getSuccessfulRequests
+     * @returns {Number}    Total number successful requests
+     */
+    getSuccessfulRequests() {
+        return this.breaker.stats.successfulResponses;
+    }
+
+    /**
+     * Get the Total Number of failed requests
+     * @method  getSuccessfulRequests
+     * @returns {Number}    Total number failed requests
+     */
+    getFailedRequests() {
+        return this.breaker.stats.failedResponses;
+    }
+
+    /**
+     * Get the Total Number of concurrent requests
+     * @method  getConcurrentRequests
+     * @returns {Number}    Total number concurrent requests
+     */
+    getConcurrentRequests() {
+        return this.breaker.stats.concurrentRequests();
+    }
+
+    /**
+     * Get the Average response time of the requests
+     * @method  getAverageRequestTime
+     * @returns {Number}    Total number concurrent requests
+     */
+    getAverageRequestTime() {
+        return this.breaker.stats.averageResponseTime();
     }
 }
 
